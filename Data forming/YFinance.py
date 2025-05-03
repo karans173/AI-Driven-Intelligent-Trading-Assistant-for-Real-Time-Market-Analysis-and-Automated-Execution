@@ -21,3 +21,7 @@ print("\n\n")
 print(df.columns)
 print("\n\n")
 print(df.index)
+
+df.to_csv(f"{user_input}.csv", index=True)
+print("\n\n")
+print("Data saved to CSV file.")
