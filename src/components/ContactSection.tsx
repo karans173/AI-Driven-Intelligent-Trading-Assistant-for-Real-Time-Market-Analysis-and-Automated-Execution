@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,10 +90,6 @@ const ContactSection = () => {
           <div className="relative">
             <div className="absolute -z-10 w-64 h-64 bg-neon/20 rounded-full blur-3xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
             <div className="bg-dark-100 border border-white/10 rounded-xl p-8 relative">
-              <div className="absolute -top-12 -right-12 w-24 h-24">
-                <SplineScene sceneUrl="https://prod.spline.design/8cfb6748-f3dd-44dd-89fb-f46c7ab4186e/scene.splinecode" />
-              </div>
-
               <h3 className="text-xl font-semibold text-white mb-6">
                 Send Us a Message
               </h3>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SplineScene from "./SplineScene";
+import SplineScene from "./PreloaderSpline";
 
 const PreLoader = () => {
   const [loading, setLoading] = useState(true);
@@ -8,7 +8,7 @@ const PreLoader = () => {
     // Simulate loading time and then fade out
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3500);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -21,8 +21,8 @@ const PreLoader = () => {
         loading ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="w-full max-w-md h-96 relative">
-        <SplineScene sceneUrl="https://prod.spline.design/de399826-b9f3-4b1d-890f-7c261b47ebea/scene.splinecode" />
+      <div className="w-full max-w-md h-96 relative flex items-center justify-center">
+        <SplineScene scene="https://prod.spline.design/SJm8cLF1FOtn0BrX/scene.splinecode" />
 
         <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center">
           <p className="text-white text-xl mb-3">Welcome to TradeScribeAI</p>
