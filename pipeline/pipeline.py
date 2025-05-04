@@ -8,6 +8,12 @@ import google.generativeai as genai
 import sqlite3
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import numpy as np
+from dotenv import load_dotenv
+import os
+import json
+
+# Load environment variables from .env file
+load_dotenv()
 
 user_input = input("Enter the stock name (e.g., RELIANCE): ").strip().upper()
 symbol = input("enter stock ticker (e.g., RELIANCE.NS): ").strip().upper()
@@ -35,7 +41,7 @@ def get_stock_data(user_input):
     return df
 def get_news_using_gemini(stock_name, ticker_symbol):
 # Replace with your actual Gemini API key
-    API_KEY = "AIzaSyAG4zSrJ-tt06NVMO3LxyjhPGqzYUXs7-k"
+    API_KEY = os.getenv("API_KEY")
 
     # Initialize Gemini API
     genai.configure(api_key=API_KEY)
