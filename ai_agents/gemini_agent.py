@@ -3,9 +3,9 @@
 import google.generativeai as genai
 
 def get_news_summary(stock_name: str, ticker_symbol: str) -> str:
-    API_KEY = "AIzaSyAG4zSrJ-tt06NVMO3LxyjhPGqzYUXs7-k"
+    API_KEY = "AIzaSyCw7R-FDCBts6kZF8F0rF5UVmgQljJ-dkM"
     genai.configure(api_key=API_KEY)
-    model = genai.GenerativeModel('gemini-1.5-pro-latest')
+    model = genai.GenerativeModel('gemini-2.0-flash')
 
     prompt = (
         f"Find all financial and stock-related news about {stock_name} ({ticker_symbol}) from the past 30 days. "

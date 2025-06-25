@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
@@ -14,25 +13,25 @@ import PreLoader from "@/components/PreLoader";
 const Index = () => {
   // Add a smooth scroll effect for anchor links
   useEffect(() => {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
         e.preventDefault();
-        const targetId = this.getAttribute('href')?.substring(1);
+        const targetId = this.getAttribute("href")?.substring(1);
         if (!targetId) return;
-        
+
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
           window.scrollTo({
             top: targetElement.offsetTop - 80, // Adjust for the fixed header
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         }
       });
     });
-    
+
     return () => {
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.removeEventListener('click', function (e) {
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.removeEventListener("click", function (e) {
           // Clean up
         });
       });
@@ -43,15 +42,14 @@ const Index = () => {
     <div className="min-h-screen bg-dark-200 overflow-x-hidden">
       <PreLoader />
       <NavBar />
-      <div className="pt-16"> {/* Add padding to account for fixed navbar */}
+      <div className="pt-16">
+        {" "}
+        {/* Add padding to account for fixed navbar */}
         <HeroSection />
         <FeaturesSection />
         <div className="flex flex-col lg:flex-row">
           <div className="w-full lg:w-1/2">
             <InputForm />
-          </div>
-          <div className="w-full lg:w-1/2">
-            {/* This space could be used for additional content or left as is for visual balance */}
           </div>
         </div>
         <InsightsSection />

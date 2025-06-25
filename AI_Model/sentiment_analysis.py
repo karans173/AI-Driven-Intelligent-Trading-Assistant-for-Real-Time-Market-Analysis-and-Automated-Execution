@@ -1,4 +1,4 @@
-file_path = 'C:\python\AI-Driven-Intelligent-Trading-Assistant-for-Real-Time-Market-Analysis-and-Automated-Execution\generated_text.txt'
+file_path = 'C:/Users/Manmeet/Desktop/AI-Thon/Trade-AI/AI Model/generated_text.txt'
 import pandas as pd
 
 def analyze_text_file_sentiment(file_path):
@@ -99,20 +99,20 @@ def generate_trading_signals(price_data, sentiment_result, risk_profile='moderat
     
     return signals
 
-if __name__ == "__main__":
-    analyze_text_file_sentiment(file_path)
-    # Example usage
-    file_path = 'C:\python\AI-Driven-Intelligent-Trading-Assistant-for-Real-Time-Market-Analysis-and-Automated-Execution\generated_text.txt'
-    sentiment_result = analyze_text_file_sentiment(file_path)
+# if __name__ == "__main__":
+#     analyze_text_file_sentiment(file_path)
+#     # Example usage
+#     file_path = 'C:/Users/Manmeet/Desktop/AI-Thon/Trade-AI/AI Model/generated_text.txt'
+#     sentiment_result = analyze_text_file_sentiment(file_path)
     
-    # Example price data (replace with actual data)
-    price_data = {
-        'AAPL': pd.DataFrame({
-            'Close': [150, 152, 153, 151, 155, 157, 158]
-        }),
-        'GOOGL': pd.DataFrame({
-            'Close': [2800, 2820, 2810, 2830, 2840, 2850, 2860]
-        })
-    }
+#     # Example price data (replace with actual data)
+#     price_data = {
+#         'AAPL': pd.DataFrame({
+#             'Close': [150, 152, 153, 151, 155, 157, 158]
+#         }),
+#         'GOOGL': pd.DataFrame({
+#             'Close': [2800, 2820, 2810, 2830, 2840, 2850, 2860]
+#         })
+#     }
     
-    signals = generate_trading_signals(price_data, sentiment_result)
+#     signals = generate_trading_signals(price_data, sentiment_result)

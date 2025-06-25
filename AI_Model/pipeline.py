@@ -201,30 +201,30 @@ def evaluate_model(predictions, actual):
     
     return rmse, mape
 
-def plot_results(df, predictions, actual, feature='Close', ticker='Stock'):
-    """
-    Plot the predictions vs actual prices
-    """
-    plt.figure(figsize=(16, 8))
+# def plot_results(df, predictions, actual, feature='Close', ticker='Stock'):
+#     """
+#     Plot the predictions vs actual prices
+#     """
+#     plt.figure(figsize=(16, 8))
     
-    # Plot training data
-    train = df[:len(df)-len(predictions)]
-    valid = df[len(df)-len(predictions):]
+#     # Plot training data
+#     train = df[:len(df)-len(predictions)]
+#     valid = df[len(df)-len(predictions):]
     
-    # Create a DataFrame for visualization
-    valid_df = valid.copy()
-    valid_df['Predictions'] = predictions
+#     # Create a DataFrame for visualization
+#     valid_df = valid.copy()
+#     valid_df['Predictions'] = predictions
     
-    plt.title(f'{ticker} {feature} Price Prediction')
-    plt.xlabel('Date')
-    plt.ylabel(f'{feature} Price (₹)')  # Changed to ₹ for Indian stocks
-    plt.plot(train[feature])
-    plt.plot(valid_df[[feature, 'Predictions']])
-    plt.legend(['Train', 'Actual', 'Predictions'], loc='lower right')
+#     plt.title(f'{ticker} {feature} Price Prediction')
+#     plt.xlabel('Date')
+#     plt.ylabel(f'{feature} Price (₹)')  # Changed to ₹ for Indian stocks
+#     plt.plot(train[feature])
+#     plt.plot(valid_df[[feature, 'Predictions']])
+#     plt.legend(['Train', 'Actual', 'Predictions'], loc='lower right')
     
-    # Save the plot
-    plt.savefig(f"{ticker}_prediction.png")
-    return plt
+#     # Save the plot
+#     plt.savefig(f"{ticker}_prediction.png")
+#     return plt
 
 def forecast_future(model, last_sequence, scaler, days_to_predict=30):
     """
@@ -299,8 +299,8 @@ def run_stock_prediction(ticker, feature='Close', time_steps=60, test_size=0.2, 
     rmse, mape = evaluate_model(predictions, y_test_actual)
     
     # 8. Plot results
-    plt_obj = plot_results(df, predictions, y_test_actual, feature, ticker)
-    plt_obj.show()
+    # plt_obj = plot_results(df, predictions, y_test_actual, feature, ticker)
+    # plt_obj.show()
     
     # 9. Forecast future
     last_sequence = test_data[-time_steps:]
@@ -324,15 +324,15 @@ def run_stock_prediction(ticker, feature='Close', time_steps=60, test_size=0.2, 
     future_df.to_csv(f"{ticker}_forecast.csv")
     
     # Plot future predictions
-    plt.figure(figsize=(16, 8))
-    plt.title(f'{ticker} {feature} Price Forecast')
-    plt.xlabel('Date')
-    plt.ylabel(f'{feature} Price (₹)')
-    plt.plot(df[feature][-30:])  # Show last 30 days of historical data
-    plt.plot(future_df[f'Predicted_{feature}'])
-    plt.legend(['Historical', 'Forecast'], loc='lower right')
-    plt.savefig(f"{ticker}_forecast.png")
-    plt.show()
+    # plt.figure(figsize=(16, 8))
+    # plt.title(f'{ticker} {feature} Price Forecast')
+    # plt.xlabel('Date')
+    # plt.ylabel(f'{feature} Price (₹)')
+    # plt.plot(df[feature][-30:])  # Show last 30 days of historical data
+    # plt.plot(future_df[f'Predicted_{feature}'])
+    # plt.legend(['Historical', 'Forecast'], loc='lower right')
+    # plt.savefig(f"{ticker}_forecast.png")
+    # plt.show()
     
     return model, scaler, df, future_df
 
@@ -374,34 +374,34 @@ def analyze_trend(future_df, feature='Predicted_Close'):
         "volatility": volatility
     }
 
-if __name__ == "__main__":
-    print("==== INDIAN STOCK PRICE PREDICTION SYSTEM ====")
-    print("This system will fetch data, build an LSTM model, and forecast stock prices")
-    print("--------------------------------------------")
+# if __name__ == "__main__":
+#     print("==== INDIAN STOCK PRICE PREDICTION SYSTEM ====")
+#     print("This system will fetch data, build an LSTM model, and forecast stock prices")
+#     print("--------------------------------------------")
     
-    user_input = input("Enter the stock name (e.g., TATAMOTORS): ").strip().upper()
-    ticker_symbol = input("Enter stock ticker (e.g., TATAMOTORS.NS): ").strip().upper()
+#     user_input = 'TATAMOTORS'
+#     ticker_symbol = 'TATAMOTORS.NS'
     
-    # Get news (adapted from original pipeline)
-    news_summary = get_news_summary(user_input, ticker_symbol)
+#     # Get news (adapted from original pipeline)
+#     news_summary = get_news_summary(user_input, ticker_symbol)
     
-    # Run stock prediction (for ticker)
-    print("\n=== Running LSTM Stock Prediction Model ===")
-    model, scaler, historical_df, future_df = run_stock_prediction(
-        ticker=ticker_symbol,
-        feature='Close',
-        time_steps=60,
-        test_size=0.2,
-        epochs=50,
-        forecast_days=30
-    )
+#     # Run stock prediction (for ticker)
+#     print("\n=== Running LSTM Stock Prediction Model ===")
+#     model, scaler, historical_df, future_df = run_stock_prediction(
+#         ticker=ticker_symbol,
+#         feature='Close',
+#         time_steps=60,
+#         test_size=0.2,
+#         epochs=50,
+#         forecast_days=30
+#     )
     
-    # Analyze the forecasted trend
-    trend_analysis = analyze_trend(future_df)
+#     # Analyze the forecasted trend
+#     trend_analysis = analyze_trend(future_df)
     
-    print("\n=== PREDICTION COMPLETE ===")
-    print(f"Files saved:")
-    print(f"- {ticker_symbol}_data.csv: Historical data")
-    print(f"- {ticker_symbol}_forecast.csv: Forecasted prices")
-    print(f"- {ticker_symbol}_prediction.png: Model validation plot")
-    print(f"- {ticker_symbol}_forecast.png: Future forecast plot")
+#     # print("\n=== PREDICTION COMPLETE ===")
+#     # print(f"Files saved:")
+#     # print(f"- {ticker_symbol}_data.csv: Historical data")
+#     # print(f"- {ticker_symbol}_forecast.csv: Forecasted prices")
+#     # print(f"- {ticker_symbol}_prediction.png: Model validation plot")
+#     # print(f"- {ticker_symbol}_forecast.png: Future forecast plot")
