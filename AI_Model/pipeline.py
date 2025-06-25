@@ -26,11 +26,11 @@ def get_stock_data(user_input, period="1y", interval="1d"):
     """
     try:
         # If .NS is not in the ticker, add it for Indian stocks
-        if ".NS" not in user_input:
-            ticker = f"{user_input}.NS"
-        else:
-            ticker = user_input
-            
+        # if ".NS" not in user_input:
+        #     ticker = f"{user_input}.NS"
+        # else:
+        #     ticker = user_input
+        ticker = user_input.strip().upper()  # Ensure ticker is in uppercase and stripped of whitespace
         stock = yf.Ticker(ticker)
         
         # Get historical data

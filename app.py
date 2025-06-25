@@ -4,14 +4,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
 # Setup paths for module imports
-sys.path.append(os.path.dirname(os.path.abspath("C://Users/Manmeet/Desktop/AI-Thon/Trade-AI/ai_agents")))
+sys.path.append(os.path.dirname(os.path.abspath("D:\\Projects\\AI-Driven-Intelligent-Trading-Assistant-for-Real-Time-Market-Analysis-and-Automated-Execution\\ai_agents")))
 
 # Agent imports
 from ai_agents.yfinance_agent import fetch_stock_data
 from ai_agents.gemini_agent import get_news_summary
 from ai_agents.historical_analysis_agent import historical_stock_analysis
 
-sys.path.append(os.path.dirname(os.path.abspath("C://Users/Manmeet/Desktop/AI-Thon/Trade-AI/AI_M")))
+sys.path.append(os.path.dirname(os.path.abspath("D:\\Projects\\AI-Driven-Intelligent-Trading-Assistant-for-Real-Time-Market-Analysis-and-Automated-Execution\\AI_Model")))
 
 from AI_Model.sentiment_analysis import analyze_text_file_sentiment, generate_trading_signals
 from AI_Model.pipeline import run_stock_prediction, analyze_trend
@@ -47,7 +47,7 @@ def handle_stock():
         response = {}
 
         # 1. Fetch latest data
-        df = fetch_stock_data(stock)
+        df = fetch_stock_data(symbol)
         if df is None or df.empty:
             return jsonify({"error": "Failed to fetch stock data"}), 500
         response["latest_data"] = df.tail(5).to_dict(orient="records")

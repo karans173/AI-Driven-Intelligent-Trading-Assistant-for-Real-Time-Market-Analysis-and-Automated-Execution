@@ -4,7 +4,7 @@ import yfinance as yf
 import pandas as pd
 
 def fetch_stock_data(ticker: str, days: int = 7) -> pd.DataFrame:
-    ticker = ticker.strip().upper() + ".NS"
+    ticker = ticker.strip().upper() #+ ".NS"
     stock = yf.Ticker(ticker)
 
     df = stock.history(period=f"{days}d", interval="1m")
