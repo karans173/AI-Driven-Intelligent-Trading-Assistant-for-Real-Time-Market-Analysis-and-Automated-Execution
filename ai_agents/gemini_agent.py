@@ -3,7 +3,7 @@
 import google.generativeai as genai
 
 def get_news_summary(stock_name: str, ticker_symbol: str) -> str:
-    API_KEY = "AIzaSyCw7R-FDCBts6kZF8F0rF5UVmgQljJ-dkM"
+    API_KEY = "****"
     genai.configure(api_key=API_KEY)
     model = genai.GenerativeModel('gemini-2.0-flash')
 
