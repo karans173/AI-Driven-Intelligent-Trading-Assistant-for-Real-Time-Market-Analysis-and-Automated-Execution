@@ -31,7 +31,7 @@ def upload_to_supabase_direct(content: str, file_name: str) -> str:
     return public_url
 
 
-def get_news_summary(stock_name: str, ticker_symbol: str, file_name: str = "generated_text.txt") -> str:
+def get_news_summary(stock_name: str, ticker_symbol: str) -> str:
     API_KEY = "AIzaSyCw7R-FDCBts6kZF8F0rF5UVmgQljJ-dkM"
     genai.configure(api_key=API_KEY)
     model = genai.GenerativeModel('gemini-2.0-flash')
