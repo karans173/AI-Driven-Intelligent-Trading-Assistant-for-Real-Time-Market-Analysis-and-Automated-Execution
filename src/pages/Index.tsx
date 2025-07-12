@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -11,30 +13,29 @@ import Footer from "@/components/Footer";
 import PreLoader from "@/components/PreLoader";
 
 const Index = () => {
-  // Add a smooth scroll effect for anchor links
-  useEffect(() => {
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute("href")?.substring(1);
-        if (!targetId) return;
+  const [ticker, setTicker] = useState<string>("");
 
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80, // Adjust for the fixed header
-            behavior: "smooth",
-          });
-        }
-      });
-    });
+  // Smooth scroll for anchor links
+  useEffect(() => {
+    const anchors = document.querySelectorAll('a[href^="#"]');
+
+    const handleClick = (e: Event) => {
+      e.preventDefault();
+      const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute("href")?.substring(1);
+      if (!targetId) return;
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - 80,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    anchors.forEach((anchor) => anchor.addEventListener("click", handleClick));
 
     return () => {
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.removeEventListener("click", function (e) {
-          // Clean up
-        });
-      });
+      anchors.forEach((anchor) => anchor.removeEventListener("click", handleClick));
     };
   }, []);
 
@@ -43,16 +44,19 @@ const Index = () => {
       <PreLoader />
       <NavBar />
       <div className="pt-16">
-        {" "}
-        {/* Add padding to account for fixed navbar */}
         <HeroSection />
         <FeaturesSection />
+
         <div className="flex flex-col lg:flex-row">
           <div className="w-full lg:w-1/2">
-            <InputForm />
+            {/* ✅ Passing setTicker to InputForm to update it */}
+            <InputForm onTickerSubmit={setTicker} />
           </div>
         </div>
-        <InsightsSection />
+
+        {/* ✅ Only render InsightsSection when a ticker is provided */}
+        {ticker && <InsightsSection ticker={ticker} />}
+
         <PerformanceSection />
         <PricingSection />
         <ContactSection />

@@ -19,8 +19,7 @@ from AI_Model.pipeline import run_stock_prediction, analyze_trend
 import pandas as pd
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all for dev
 def convert_types(obj):
     if isinstance(obj, dict):
         return {k: convert_types(v) for k, v in obj.items()}
@@ -92,6 +91,32 @@ def handle_stock():
         return jsonify({"error": str(e)}), 500
 
 
+#############################################################################################################
+@app.route("/api/live-stocks", methods=["GET"])
+def live_stocks():
+    try:
+        symbols = ["AAPL", "MSFT", "TSLA"]
+        live_data = {}
+
+        for symbol in symbols:
+            df = fetch_stock_data(symbol, days=7)
+            df = df[['Date', 'Close']]
+            df = df.groupby('Date').mean().reset_index()
+            df.rename(columns={"Close": symbol}, inplace=True)
+
+            if live_data:
+                live_data = pd.merge(live_data, df, on="Date", how="outer")
+            else:
+                live_data = df
+
+        live_data = live_data.fillna(method="ffill").to_dict(orient="records")
+        return jsonify(live_data)
+    except Exception as e:
+        print("❌ Error fetching live stocks:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+##############################################################################################
 if __name__ == "__main__":
     print("🚀 Starting AI Trading Assistant backend...")
     app.run(debug=True, use_reloader=False)

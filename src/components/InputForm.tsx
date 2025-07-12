@@ -26,6 +26,10 @@ import axios from "axios";
 import { MultiStepLoader } from "./multi-step-loader";
 import InsightsSummary from "./InsightsSummary";
 
+interface InputFormProps {
+  onTickerSubmit?: (ticker: string) => void;
+}
+
 const loadingStates = [
   { text: "Fetching Data", duration: 15000 },
   { text: "Running LSTM forecast", duration: 30000 },
@@ -33,7 +37,7 @@ const loadingStates = [
   { text: "Analyzing Sentiment from news summary", duration: 40000 },
 ];
 
-const InputForm = () => {
+const InputForm = ({ onTickerSubmit }: InputFormProps) => {
   const { toast } = useToast();
   const [company, setCompany] = useState("");
   const [symbol, setSymbol] = useState("");
@@ -48,7 +52,7 @@ const InputForm = () => {
     setResultData(null); // Reset previous results
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/stocks", {
+      const response = await axios.post("https://final-backend-new-production.up.railway.app/api/stocks", {
         stock: company,
         symbol: symbol,
         agent: "all",
@@ -56,6 +60,9 @@ const InputForm = () => {
         timeline,
       });
 
+      if (onTickerSubmit) {
+        onTickerSubmit(symbol.trim().toUpperCase());
+      }
       console.log("✅ API Response:", response.data);
       setResultData(response.data);
 

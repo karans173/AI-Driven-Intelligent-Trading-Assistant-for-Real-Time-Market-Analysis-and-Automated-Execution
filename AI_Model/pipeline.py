@@ -1,5 +1,6 @@
 import yfinance as yf
 import pandas as pd
+# import supabase
 import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
@@ -8,9 +9,42 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 import os
+from supabase import create_client, Client
+import io
+import requests
 
 # Set random seed for reproducibility
 np.random.seed(42)
+
+SUPABASE_URL = "https://rizamamuiwyyplawssvr.supabase.co"        # e.g., https://yourproject.supabase.co/
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpemFtYW11aXd5eXBsYXdzc3ZyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjEzMDcwMiwiZXhwIjoyMDY3NzA2NzAyfQ.RYVgSqjNiHcWWTrhrmUl5BuCBxiZeZjfQwo3pI3EjFw"      # keep this secret
+SUPABASE_BUCKET = "forecast-csv"                 # your bucket name
+
+def upload_csv_to_supabase(df: pd.DataFrame, file_name_in_bucket: str):
+    """
+    Upload a DataFrame as a CSV directly to Supabase Storage bucket without saving locally.
+    """
+    # Convert DataFrame to CSV in memory
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=True)
+    csv_buffer.seek(0)
+
+    url = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{file_name_in_bucket}"
+
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "text/csv"
+    }
+
+    response = requests.put(url, headers=headers, data=csv_buffer.read())
+
+    if response.status_code in [200, 201]:
+        print(f"✅ Uploaded to Supabase: {file_name_in_bucket}")
+        return f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/{file_name_in_bucket}"
+    else:
+        print(f"❌ Upload failed: {response.status_code} - {response.text}")
+        return None
 
 def get_stock_data(user_input, period="1y", interval="1d"):
     """
@@ -49,7 +83,7 @@ def get_stock_data(user_input, period="1y", interval="1d"):
         print(df.tail())
         
         # Save data to CSV
-        df.to_csv(f"{user_input}_data.csv", index=True)
+        # df.to_csv(f"{user_input}_data.csv", index=True)
         
         return df
     
@@ -321,7 +355,17 @@ def run_stock_prediction(ticker, feature='Close', time_steps=60, test_size=0.2, 
     print(future_df.head())
     
     # Save future predictions to CSV
-    future_df.to_csv(f"{ticker}_forecast.csv")
+    csv_filename = f"{ticker}_forecast.csv"
+    
+
+    uploaded_url = upload_csv_to_supabase(future_df, csv_filename)
+    if uploaded_url:
+        print("📦 CSV uploaded successfully!")
+        print("Public URL:", uploaded_url)
+    else:
+        print("⚠️ Failed to upload CSV to Supabase.")
+
+    
     
     # Plot future predictions
     # plt.figure(figsize=(16, 8))

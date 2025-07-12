@@ -9,6 +9,8 @@ def fetch_stock_data(ticker: str, days: int = 7) -> pd.DataFrame:
 
     df = stock.history(period=f"{days}d", interval="1m")
     df = df[['Open', 'High', 'Low', 'Close', 'Volume']]
+    df['Date'] = df.index.strftime('%Y-%m-%d')
+    df.reset_index(drop=True, inplace=True)
     df.to_csv(f"{ticker}.csv", index=True)
 
     return df

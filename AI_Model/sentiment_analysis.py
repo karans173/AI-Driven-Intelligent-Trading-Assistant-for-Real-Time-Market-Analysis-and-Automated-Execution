@@ -1,52 +1,74 @@
-file_path = 'C:/Users/Manmeet/Desktop/AI-Thon/Trade-AI/AI Model/generated_text.txt'
 import pandas as pd
+from supabase import create_client
+from transformers import pipeline
 
-def analyze_text_file_sentiment(file_path):
-    """
-    Analyze sentiment from a small text file containing market-related information
-    """
-    with open(file_path, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
-    
-    lines = [line.strip() for line in lines if line.strip()]
-    
-    from transformers import pipeline
-    sentiment_analyzer = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
-    
+SUPABASE_URL = "https://rizamamuiwyyplawssvr.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpemFtYW11aXd5eXBsYXdzc3ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxMzA3MDIsImV4cCI6MjA2NzcwNjcwMn0.Qfno-pgz05Fjs0_K5WKMLdUFtVeg-NuNVoZhPIwLjvg"
+BUCKET_NAME = "news-summary"
+FILE_NAME = "generated_text.txt"
+
+def analyze_text_file_sentiment(file_name: str = FILE_NAME):
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    # Download file as bytes
+    try:
+        response = supabase.storage.from_(BUCKET_NAME).download(file_name)
+        if response is None:
+            raise Exception("❌ File not found or download returned None")
+        content = response.decode("utf-8")
+    except Exception as e:
+        print(f"❌ Exception occurred while downloading or decoding: {e}")
+        return None
+
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+
+    if not lines:
+        print("⚠️ No valid lines found in the file.")
+        return None
+
+    sentiment_analyzer = pipeline(
+        "sentiment-analysis",
+        model="distilbert-base-uncased-finetuned-sst-2-english"
+    )
+
     results = []
-    
+
     for line in lines:
         if len(line) < 10:
             continue
-            
-        result = sentiment_analyzer(line)[0]
-        results.append({
-            'text': line,
-            'sentiment': result['label'],
-            'score': result['score']
-        })
-    
-    positive_lines = [r for r in results if r['sentiment'] == 'POSITIVE']
-    positive_ratio = len(positive_lines) / len(results) if results else 0.5
-    
-    avg_sentiment_score = sum(r['score'] for r in results) / len(results) if results else 0.5
+        try:
+            result = sentiment_analyzer(line)[0]
+            results.append({
+                'text': line,
+                'sentiment': result['label'],
+                'score': result['score']
+            })
+        except Exception as e:
+            print(f"⚠️ Error analyzing line: {line[:30]}... | {e}")
 
-    if positive_ratio > 0.5:
-        normalized_sentiment = (positive_ratio - 0.5) * 2
-    else:
-        normalized_sentiment = (positive_ratio - 0.5) * 2
-    print(f"Overall Sentiment: {'POSITIVE' if positive_ratio > 0.5 else 'NEGATIVE'}")
-    print(f"Positive Ratio: {positive_ratio:.2f}")
-    print(f"Normalized Sentiment: {normalized_sentiment:.2f}")
-    print(f"Average Sentiment Score: {avg_sentiment_score:.2f}")
-    results= {
+    if not results:
+        print("⚠️ No valid sentiment results found.")
+        return None
+
+    positive_lines = [r for r in results if r['sentiment'] == 'POSITIVE']
+    positive_ratio = len(positive_lines) / len(results)
+    avg_sentiment_score = sum(r['score'] for r in results) / len(results)
+    normalized_sentiment = (positive_ratio - 0.5) * 2
+
+    print(f"✅ Overall Sentiment: {'POSITIVE' if positive_ratio > 0.5 else 'NEGATIVE'}")
+    print(f"📊 Positive Ratio: {positive_ratio:.2f}")
+    print(f"📈 Normalized Sentiment: {normalized_sentiment:.2f}")
+    print(f"🔢 Average Sentiment Score: {avg_sentiment_score:.2f}")
+
+    return {
         'results': results,
         'overall_sentiment': 'POSITIVE' if positive_ratio > 0.5 else 'NEGATIVE',
         'positive_ratio': positive_ratio,
         'normalized_sentiment': normalized_sentiment,
         'avg_sentiment_score': avg_sentiment_score
     }
-    return results
+
+
 
 
 
